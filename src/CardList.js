@@ -35,7 +35,7 @@ class CardList extends Component {
       })
       .then(function(jsonResponse){
         //console.log(jsonResponse);
-        var { results } = jsonResponse;
+        var { results, total_pages } = jsonResponse;
         //console.log(results);
 
         _.forEach(results, (element) => {
@@ -46,15 +46,17 @@ class CardList extends Component {
         });
 
         //console.log(list);
-        contex.setState({cardArray: list, render: true});
+        contex.setState({cardArray: list, render: true, totPages : total_pages});
         //console.log(contex.state.cardArray);
       });
   }
 
   _handleNext(e) {
     console.log("NexMember");
-    currentPage +=1;
-    this.setState({ render:false, pageNum: currentPage});
+    if (currentPage < this.state.totPages){
+      currentPage +=1;
+      this.setState({ render:false, pageNum: currentPage});
+    }
   }
 
   _handlePrev(e) {
@@ -79,7 +81,7 @@ class CardList extends Component {
       <div>
         <MuiThemeProvider muiTheme= {getMuiTheme(darkBaseTheme)}>
           <div>
-            <AppBar title="Etherum news"
+            <AppBar title={"Etherum news " + this.state.pageNum}
               iconElementLeft={<FlatButton label="Previous" onClick={this._handlePrev}/>}
               iconElementRight={<FlatButton label="Next" onClick={this._handleNext}/>}
               />
